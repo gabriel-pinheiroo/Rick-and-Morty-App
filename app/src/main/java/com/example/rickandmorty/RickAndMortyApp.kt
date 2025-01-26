@@ -51,7 +51,7 @@ fun RickAndMortyApp(
         },
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(Color.DarkGray),
         contentWindowInsets = WindowInsets(top = 48.dp),
     ) {
         RickAndMortyNavHost(

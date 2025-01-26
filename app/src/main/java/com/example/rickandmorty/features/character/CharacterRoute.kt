@@ -1,15 +1,29 @@
 package com.example.rickandmorty.features.character
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.rickandmorty.components.topbar.TopBarConfig
+import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.features.theme.LocalBottomBarManager
 import com.example.rickandmorty.features.theme.LocalTopBarManager
 
@@ -23,7 +37,10 @@ fun CharacterRoute(
 
     CharacterScreen(
         modifier = modifier,
-        state = state
+        state = state,
+        onLoadMore = {
+            viewModel.loadMoreCharacters()
+        }
     )
 }
 
@@ -31,9 +48,11 @@ fun CharacterRoute(
 fun CharacterScreen(
     modifier: Modifier = Modifier,
     state: CharacterState = CharacterState.Idle,
+    onLoadMore: () -> Unit = {},
 ) {
     val bottomBarManager = LocalBottomBarManager.current
     val topBarManager = LocalTopBarManager.current
+    val lazyListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
         bottomBarManager.showBottomBar()
@@ -46,12 +65,58 @@ fun CharacterScreen(
         )
     }
 
-    LazyColumn {
-        items(state.characters) { character ->
-            Text(
-                text = character.name
-            )
+    val shouldPaginate by remember {
+        derivedStateOf {
+            val lastVisibleIndex =
+                lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+            val totalItems = lazyListState.layoutInfo.totalItemsCount
+            lastVisibleIndex >= totalItems - 1 && totalItems > 0
         }
     }
 
+    LaunchedEffect(shouldPaginate) {
+        if (shouldPaginate) {
+            onLoadMore()
+        }
+    }
+
+    LazyColumn(
+        state = lazyListState,
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.DarkGray)
+    ) {
+        items(state.characters) { character ->
+            CharactersCard(
+                character = character
+            )
+        }
+    }
+}
+
+@Composable
+fun CharactersCard(
+    character: Character,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Gray)
+    ) {
+        Row {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(character.image)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier.size(100.dp)
+            )
+            Text(
+                text = character.name,
+                color = Color.White
+            )
+        }
+    }
 }

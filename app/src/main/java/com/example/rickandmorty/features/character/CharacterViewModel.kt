@@ -26,12 +26,25 @@ class CharacterViewModel @Inject constructor(
             initialValue = CharacterState.Idle,
         )
 
+    private var currentPage = 1
+    private var isLastPage = false
+
     private fun getCharacters() {
+        if (isLastPage) return
         viewModelScope.launch {
             _state.update { it.onLoading() }
             try {
-                val characters = characterUseCase.getCharacters().getOrThrow()
-                _state.update { it.onCharactersLoaded(characters) }
+                val characters = characterUseCase.getCharacters(page = currentPage).getOrThrow()
+                if (characters.isEmpty()) {
+                    isLastPage = true
+                } else {
+                    _state.update { currentState ->
+                        currentState.onCharactersLoaded(
+                            (currentState.characters + characters).distinctBy { it.id }
+                        )
+                    }
+                currentPage++
+                }
             } catch (e: Throwable) {
                 println("Could not get characters. ex: $e")
                 _state.update { it.onLoadingFinished() }
@@ -39,5 +52,9 @@ class CharacterViewModel @Inject constructor(
                 _state.update { it.onLoadingFinished() }
             }
         }
+    }
+
+    fun loadMoreCharacters() {
+        getCharacters()
     }
 }

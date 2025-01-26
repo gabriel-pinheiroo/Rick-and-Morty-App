@@ -9,7 +9,7 @@ data class CharacterState(
 ) {
     fun onLoading() = copy(isLoading = true, hasError = false)
     fun onLoadingFinished() = copy(isLoading = false)
-    fun onCharactersLoaded(characters: List<Character>) = copy(characters = characters)
+    fun onCharactersLoaded(characters: List<Character>) = copy(characters = characters, isLoading = false)
 
     companion object {
         internal val Idle = CharacterState()

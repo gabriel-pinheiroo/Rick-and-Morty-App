@@ -1,5 +1,6 @@
 package com.example.rickandmorty.components.topbar
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.rickandmorty.ui.theme.Alabaster
-import com.example.rickandmorty.ui.theme.Mercury
 
 data class TopBarConfig(
     val title: String = "",
@@ -29,16 +28,20 @@ fun RickAndMortyTopBar(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.DarkGray)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
-        ){
-            if(config.showTitle){
+        ) {
+            if (config.showTitle) {
                 Text(
                     text = config.title,
-                    color = Color.Alabaster,
+                    color = Color.LightGray,
                     fontSize = 24.sp,
                     modifier = Modifier.align(Alignment.Center),
                 )
@@ -48,7 +51,7 @@ fun RickAndMortyTopBar(
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth(),
-            color = Color.Mercury,
+            color = Color.LightGray,
             thickness = 1.dp
         )
     }

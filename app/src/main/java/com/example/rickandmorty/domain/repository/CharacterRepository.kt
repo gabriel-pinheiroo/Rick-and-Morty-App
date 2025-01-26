@@ -4,5 +4,5 @@ import com.example.rickandmorty.domain.models.Character
 
 interface CharacterRepository {
 
-    suspend fun getCharacters(): Result<List<Character>>
+    suspend fun getCharacters(page: Int): Result<List<Character>>
 }
