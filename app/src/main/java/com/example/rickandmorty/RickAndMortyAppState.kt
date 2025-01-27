@@ -44,3 +44,5 @@ class RickAndMortyAppState(
     }
 
 }
+
+private fun String.parameterizedDestination() = this.plus("/{args}")

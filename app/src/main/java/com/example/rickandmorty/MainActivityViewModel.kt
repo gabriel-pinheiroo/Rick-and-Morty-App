@@ -24,9 +24,9 @@ class MainActivityViewModel @Inject constructor() : ViewModel() {
 
     private fun setMenuDefaults() {
         buildSet {
-            add(BottomBarMenuItem(name = "Personagens", route = "character", icon = Icons.Rounded.Person, isSelected = true))
-            add(BottomBarMenuItem(name = "Episódios", route = "episode", icon = Icons.Rounded.Menu))
-            add(BottomBarMenuItem(name = "Locais", route = "location", icon = Icons.Rounded.LocationOn))
+            add(BottomBarMenuItem(name = "Characters", route = "character", icon = Icons.Rounded.Person, isSelected = true))
+            add(BottomBarMenuItem(name = "Episodes", route = "episode", icon = Icons.Rounded.Menu))
+            add(BottomBarMenuItem(name = "Locations", route = "location", icon = Icons.Rounded.LocationOn))
         }.let {
             _menu.update { it }
         }
