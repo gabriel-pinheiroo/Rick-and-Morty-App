@@ -7,5 +7,5 @@ class LocationUseCase @Inject constructor(
     private val locationRepository: LocationRepository
 ) {
 
-    suspend fun getLocations() = locationRepository.getLocations()
+    suspend fun getLocations(page: Int) = locationRepository.getLocations(page = page)
 }

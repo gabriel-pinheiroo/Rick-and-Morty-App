@@ -4,5 +4,5 @@ import com.example.rickandmorty.domain.models.Location
 
 interface LocationRepository {
 
-    suspend fun getLocations(): Result<List<Location>>
+    suspend fun getLocations(page: Int): Result<List<Location>>
 }

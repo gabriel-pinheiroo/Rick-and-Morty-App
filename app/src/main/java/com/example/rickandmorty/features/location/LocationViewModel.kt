@@ -26,12 +26,25 @@ class LocationViewModel @Inject constructor(
             initialValue = LocationState.Idle,
         )
 
+    private var currentPage = 1
+    private var isLastPage = false
+
     private fun getLocations() {
+        if (isLastPage) return
         viewModelScope.launch {
             _state.update { it.onLoading() }
             try {
-                val locations = locationUseCase.getLocations().getOrThrow()
-                _state.update { it.onLocationsLoaded(locations) }
+                val locations = locationUseCase.getLocations(page = currentPage).getOrThrow()
+                if (locations.isEmpty()) {
+                    isLastPage = true
+                } else {
+                    _state.update { currentState ->
+                        currentState.onLocationsLoaded(
+                            (currentState.locations + locations).distinctBy { it.id }
+                        )
+                    }
+                    currentPage++
+                }
             } catch (e: Throwable) {
                 println("Could not get locations. ex: $e")
                 _state.update { it.onLoadingFinished() }
@@ -39,5 +52,9 @@ class LocationViewModel @Inject constructor(
                 _state.update { it.onLoadingFinished() }
             }
         }
+    }
+
+    fun loadMoreLocations() {
+        getLocations()
     }
 }

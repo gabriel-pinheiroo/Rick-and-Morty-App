@@ -9,10 +9,10 @@ import javax.inject.Inject
 class LocationRepositoryImpl @Inject constructor(
     private val api: LocationService
 ): LocationRepository {
-    override suspend fun getLocations(): Result<List<Location>> {
+    override suspend fun getLocations(page: Int): Result<List<Location>> {
         return try {
 
-            val result = api.getLocations()
+            val result = api.getLocations(page = page)
                 .results
                 .orEmpty()
                 .map { response ->
