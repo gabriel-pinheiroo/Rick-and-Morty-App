@@ -16,3 +16,11 @@
 ## ✨ Improvements  
 
 - Implement **TopBar**.  
+
+## 📸 Screenshots
+
+### Tela Inicial  
+![Characters Screen](assets/images/)
+
+### Tela de Detalhes  
+![Characters Detail Screen](assets/images/detail_screen.png)
