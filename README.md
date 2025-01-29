@@ -19,8 +19,10 @@
 
 ## 📸 Screenshots
 
-### Tela Inicial  
-![Characters Screen](assets/images/)
+### Characters Screen  
+![Captura de tela 2025-01-29 155843](https://github.com/user-attachments/assets/abffd09c-351c-48f5-a92f-f456885377cc)
 
-### Tela de Detalhes  
-![Characters Detail Screen](assets/images/detail_screen.png)
+
+### Characters Detail Screen
+![Captura de tela 2025-01-29 160308](https://github.com/user-attachments/assets/e46fecf1-d790-4cb0-8e60-4daf002cbd7b)
+
