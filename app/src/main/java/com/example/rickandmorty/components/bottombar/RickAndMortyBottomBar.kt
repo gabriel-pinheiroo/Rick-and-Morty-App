@@ -32,8 +32,7 @@ fun RickAndMortyBottomBar(
         modifier = modifier
             .fillMaxWidth()
             .background(Color.DarkGray)
-            .padding(bottom = 16.dp)
-            .height(48.dp),
+            .padding(bottom = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         menu.forEach { item ->
