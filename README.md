@@ -1,21 +1,18 @@
-📌 Rick and Morty App
+# 📌 Rick and Morty App
 
-Application to list all characters, locations and episodes of Rick and Morty and their details.
+> Application to list all characters, locations, and episodes of Rick and Morty and their details.
 
-🚀 Tech Stacks
+## 🚀 Tech Stacks
 
-Retrofit - HTTP requests
+- **Retrofit** - HTTP requests  
+- **Jetpack Compose** - UI toolkit  
+- **Coil** - Image renderer  
+- **Hilt** - Dependency injection  
 
-Jetpack Compose - Ui toolkit
+## 🏗️ Architecture  
 
-Coil - Image renderer
+- **MVVM (Model-View-ViewModel)**  
 
-Hilt - Dependency injection
+## ✨ Improvements  
 
- Architecture
-
-MVVM
-
-Improvements
-
-TopBar.
+- Implement **TopBar**.  
