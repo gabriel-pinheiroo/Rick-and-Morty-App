@@ -11,14 +11,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import br.com.pedropinheiro.dox_e.navigation.navigateToTopLevelDestination
 import com.example.rickandmorty.components.bottombar.BottomBarMenuItem
 import com.example.rickandmorty.features.character.navigation.characterScreen
 import com.example.rickandmorty.features.characterDetails.navigation.characterDetailsScreen
 import com.example.rickandmorty.features.characterDetails.navigation.navigateToCharacterDetails
 import com.example.rickandmorty.features.episode.navigation.episodeScreen
 import com.example.rickandmorty.features.location.navigation.locationScreen
-import com.example.rickandmorty.features.splash.navigation.splashScreen
 import com.example.rickandmorty.ui.theme.Alabaster
 
 
@@ -27,7 +25,7 @@ fun RickAndMortyNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     paddingValues: PaddingValues = PaddingValues(),
-    startDestination: Routes = Routes.Splash,
+    startDestination: Routes = Routes.Character,
     onMenuSelected: (BottomBarMenuItem) -> Unit,
 ) {
     NavHost(
@@ -39,11 +37,6 @@ fun RickAndMortyNavHost(
         enterTransition = { fadeIn() },
         exitTransition = { fadeOut() },
     ) {
-        splashScreen(
-            onDone = {
-                navController.navigateToTopLevelDestination(Routes.Character)
-            }
-        )
         characterScreen(
             onCharacterClicked = { character ->
                 navController.navigateToCharacterDetails(
