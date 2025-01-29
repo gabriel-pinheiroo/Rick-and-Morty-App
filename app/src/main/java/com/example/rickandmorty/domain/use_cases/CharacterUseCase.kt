@@ -8,4 +8,5 @@ class CharacterUseCase @Inject constructor(
 ) {
 
     suspend fun getCharacters(page: Int) = characterRepository.getCharacters(page = page)
+    suspend fun getCharacterById(id: Int) = characterRepository.getCharacterById(id = id)
 }

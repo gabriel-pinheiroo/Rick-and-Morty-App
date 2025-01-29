@@ -1,6 +1,7 @@
 package com.example.rickandmorty.features.character
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -44,6 +45,7 @@ import com.example.rickandmorty.features.theme.LocalTopBarManager
 fun CharacterRoute(
     modifier: Modifier = Modifier,
     viewModel: CharacterViewModel = hiltViewModel(),
+    onCharacterClicked: (Character) -> Unit = {},
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -53,7 +55,8 @@ fun CharacterRoute(
         state = state,
         onLoadMore = {
             viewModel.loadMoreCharacters()
-        }
+        },
+        onCharacterClicked = onCharacterClicked
     )
 }
 
@@ -62,6 +65,7 @@ fun CharacterScreen(
     modifier: Modifier = Modifier,
     state: CharacterState = CharacterState.Idle,
     onLoadMore: () -> Unit = {},
+    onCharacterClicked: (Character) -> Unit = {},
 ) {
     val bottomBarManager = LocalBottomBarManager.current
     val topBarManager = LocalTopBarManager.current
@@ -103,7 +107,8 @@ fun CharacterScreen(
     ) {
         items(state.characters) { character ->
             CharactersCard(
-                character = character
+                character = character,
+                onCharacterClicked = onCharacterClicked
             )
         }
     }
@@ -113,12 +118,14 @@ fun CharacterScreen(
 fun CharactersCard(
     character: Character,
     modifier: Modifier = Modifier,
+    onCharacterClicked: (Character) -> Unit = {},
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(8.dp))
             .background(Color.Gray)
+            .clickable(onClick = { onCharacterClicked(character) })
     ) {
         Row {
             AsyncImage(
@@ -133,7 +140,7 @@ fun CharactersCard(
             Column(
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxSize()
+                    .fillMaxSize(),
             ) {
 
                 Text(
@@ -174,22 +181,6 @@ fun CharactersCard(
                         fontWeight = FontWeight.Medium,
                     )
                 }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = "Location: ${character.location.name}",
-                    color = Color.White,
-                    fontSize = 12.sp,
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = "Origin: ${character.origin.name}",
-                    color = Color.White,
-                    fontSize = 12.sp,
-                )
             }
         }
     }

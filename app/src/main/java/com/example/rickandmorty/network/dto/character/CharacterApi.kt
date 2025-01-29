@@ -6,7 +6,7 @@ import com.example.rickandmorty.domain.models.CharacterLocationModel
 import com.example.rickandmorty.domain.models.OriginModel
 import com.google.gson.annotations.SerializedName
 
-data class Result(
+data class CharacterApi(
     @SerializedName("created")
     val created: String? = null,
     @SerializedName("episode")

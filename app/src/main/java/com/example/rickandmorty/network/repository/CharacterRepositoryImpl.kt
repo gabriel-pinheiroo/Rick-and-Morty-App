@@ -24,4 +24,14 @@ class CharacterRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun getCharacterById(id: Int): Result<Character> {
+        return try {
+            val result = api.getCharacterById(id = id)
+                .toCharacter()
+            Result.success(result)
+        } catch (e: HttpException) {
+            Result.failure(e)
+        }
+    }
 }

@@ -14,7 +14,8 @@ import androidx.navigation.compose.rememberNavController
 import br.com.pedropinheiro.dox_e.navigation.navigateToTopLevelDestination
 import com.example.rickandmorty.components.bottombar.BottomBarMenuItem
 import com.example.rickandmorty.features.character.navigation.characterScreen
-import com.example.rickandmorty.features.character.navigation.navigateToCharacter
+import com.example.rickandmorty.features.characterDetails.navigation.characterDetailsScreen
+import com.example.rickandmorty.features.characterDetails.navigation.navigateToCharacterDetails
 import com.example.rickandmorty.features.episode.navigation.episodeScreen
 import com.example.rickandmorty.features.location.navigation.locationScreen
 import com.example.rickandmorty.features.splash.navigation.splashScreen
@@ -43,9 +44,19 @@ fun RickAndMortyNavHost(
                 navController.navigateToTopLevelDestination(Routes.Character)
             }
         )
-        characterScreen()
+        characterScreen(
+            onCharacterClicked = { character ->
+                navController.navigateToCharacterDetails(
+                    characterId = character.id,
+                    characterName = character.name
+                )
+            }
+        )
         episodeScreen()
         locationScreen()
+        characterDetailsScreen(
+            onBackPressed = navController::popBackStack
+        )
     }
 
 }
