@@ -15,7 +15,8 @@
 
 ## ✨ Improvements  
 
-- Implement **TopBar**.  
+- Implement **TopBar**.
+- Dominant Color Extraction in **Character Details Screen**
 
 ## 📸 Screenshots
 
