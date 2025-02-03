@@ -1,6 +1,5 @@
 package com.example.rickandmorty.features.characterDetails
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -31,9 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
+import coil.Coil
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import coil.transform.Transformation
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.features.theme.LocalTopBarManager
 
@@ -93,23 +94,28 @@ fun CharacterDetailsContent(
     val context = LocalContext.current
     var backgroundColor by remember { mutableStateOf(Color.DarkGray) }
 
+    LaunchedEffect(state.character.image) {
+        val result = Coil.imageLoader(context)
+            .execute(
+                ImageRequest.Builder(context)
+                    .data(state.character.image)
+                    .allowHardware(false)
+                    .build()
+            )
+
+        val bitmap = (result.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap
+        bitmap?.let {
+            val palette = Palette.from(it).generate()
+            palette.dominantSwatch?.rgb?.let { colorValue ->
+                backgroundColor = Color(colorValue)
+            }
+        }
+    }
+
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(context)
             .data(state.character.image)
             .crossfade(true)
-            .transformations(object : Transformation {
-                override val cacheKey: String
-                    get() = state.character.image ?: ""
-
-                override suspend fun transform(input: Bitmap, size: coil.size.Size): Bitmap {
-                    Palette.from(input).generate { palette ->
-                        palette?.dominantSwatch?.rgb?.let { colorValue ->
-                            backgroundColor = Color(colorValue)
-                        }
-                    }
-                    return input
-                }
-            })
             .build()
     )
 
@@ -122,7 +128,8 @@ fun CharacterDetailsContent(
 
         Box(
             modifier = Modifier
-                .size(150.dp)
+                .size(170.dp)
+                .clip(RoundedCornerShape(16.dp))
                 .background(backgroundColor),
             contentAlignment = Alignment.Center
         ) {
