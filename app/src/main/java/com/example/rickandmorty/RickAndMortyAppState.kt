@@ -34,7 +34,7 @@ class RickAndMortyAppState(
     var isBottomBarEnabled by mutableStateOf(false)
 
     private val fullScreenDestinations: Set<String> = setOf(
-        Routes.Splash::class.java.canonicalName.orEmpty(),
+        Routes.CharacterDetails::class.java.canonicalName.orEmpty().parameterizedDestination(),
     )
 
     init {
