@@ -28,7 +28,7 @@ class MainActivityViewModel @Inject constructor() : ViewModel() {
             add(BottomBarMenuItem(name = "Episodes", route = "episode", icon = Icons.Rounded.Menu))
             add(BottomBarMenuItem(name = "Locations", route = "location", icon = Icons.Rounded.LocationOn))
         }.let {
-            _menu.update { it }
+            _menu.update { menu -> it }
         }
     }
 
