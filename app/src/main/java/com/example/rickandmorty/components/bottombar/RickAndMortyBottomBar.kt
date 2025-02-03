@@ -32,7 +32,7 @@ fun RickAndMortyBottomBar(
         modifier = modifier
             .fillMaxWidth()
             .background(Color.DarkGray)
-            .padding(bottom = 16.dp)
+            .padding(vertical = 8.dp)
             .height(72.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -60,18 +60,18 @@ fun BottomBarButton(
                     Icon(
                         imageVector = item.icon,
                         contentDescription = null,
-                        tint = Color.Blue
+                        tint = if(item.isSelected) Color.White else Color.DarkGray,
                     )
                     Text(
                         text = item.name,
-                        color = Color.Blue,
+                        color = if (item.isSelected) Color.White else Color.DarkGray,
                         modifier = Modifier.padding(top = 6.dp)
                     )
                 }
             },
         shape = ButtonDefaults.textShape,
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (item.isSelected) Color.Blue else Color.Gray
+            containerColor = Color.Gray
         ),
     )
 }
