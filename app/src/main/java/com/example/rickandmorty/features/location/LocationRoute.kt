@@ -124,7 +124,7 @@ private fun LocationCard(location: Location) {
 
             Text(
                 text = "Location type:",
-                color = Color.Green,
+                color = Color.White,
                 fontSize = 16.sp
             )
 
@@ -142,7 +142,7 @@ private fun LocationCard(location: Location) {
 
             Text(
                 text = "Dimension:",
-                color = Color.Green,
+                color = Color.White,
                 fontSize = 16.sp
             )
 

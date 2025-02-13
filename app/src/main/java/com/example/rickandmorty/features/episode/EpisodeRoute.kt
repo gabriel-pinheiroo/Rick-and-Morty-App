@@ -125,7 +125,7 @@ private fun EpisodeCard(episode: Episode) {
 
             Text(
                 text = episode.episode,
-                color = Color.Green,
+                color = Color.White,
                 fontSize = 16.sp
             )
 
