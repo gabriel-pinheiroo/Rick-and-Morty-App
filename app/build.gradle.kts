@@ -111,4 +111,8 @@ dependencies {
     debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:4.0.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("androidx.navigation:navigation-compose:2.8.0-alpha07")
+    implementation("androidx.compose.ui:ui:1.7.0-alpha07")
+    implementation("androidx.compose.animation:animation:1.7.0-alpha07")
+    implementation("androidx.compose.foundation:foundation:1.7.0-alpha07")
 }
