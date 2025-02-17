@@ -35,8 +35,10 @@ import androidx.palette.graphics.Palette
 import coil.Coil
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.rickandmorty.components.base.RickAndMortyLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.features.theme.LocalTopBarManager
+import kotlinx.coroutines.delay
 
 @Composable
 fun CharacterDetailsRoute(
@@ -66,8 +68,11 @@ fun CharacterDetailsScreen(
     onBackPressed: () -> Unit = {},
 ) {
     val topBarManager = LocalTopBarManager.current
+    var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
+        delay(1000)
+        isLoading = false
         topBarManager.showTopBar()
         topBarManager.setTopBarConfig(
             config = TopBarConfig(
@@ -78,11 +83,23 @@ fun CharacterDetailsScreen(
             )
         )
     }
-
-    CharacterDetailsContent(
-        state = state,
-        modifier = modifier
-    )
+    if (isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.DarkGray),
+            contentAlignment = Alignment.Center
+        ) {
+            RickAndMortyLoading(
+                size = 16.dp,
+            )
+        }
+    } else {
+        CharacterDetailsContent(
+            state = state,
+            modifier = modifier
+        )
+    }
 }
 
 @Composable

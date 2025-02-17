@@ -30,7 +30,7 @@ fun RickAndMortyLoading(
     size: Dp = 8.dp,
     delayUnit: Int = 200,
     spaceBetween: Dp = 2.dp,
-    color: Color = Color.Blue,
+    color: Color = Color.White,
 ) {
     val maxOffset = (numberOfDots * 2).toFloat()
     val duration = remember(numberOfDots, delayUnit) {
