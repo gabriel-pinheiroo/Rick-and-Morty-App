@@ -1,6 +1,9 @@
 package com.example.rickandmorty.navigation
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
@@ -10,11 +13,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.rickandmorty.components.bottombar.BottomBarMenuItem
 import com.example.rickandmorty.features.character.navigation.characterScreen
@@ -43,28 +50,44 @@ fun RickAndMortyNavHost(
     onMenuSelected: (BottomBarMenuItem) -> Unit,
 ) {
     SharedTransitionLayout {
-        NavHost(
-            navController = navController,
-            startDestination = startDestination,
-            modifier = modifier
-                .background(Color.Alabaster)
-                .padding(paddingValues),
-            enterTransition = { fadeIn() },
-            exitTransition = { fadeOut() },
+        CompositionLocalProvider(
+            LocalSharedTransitionScope provides this,
         ) {
-            characterScreen(
-                onCharacterClicked = { character ->
-                    navController.navigateToCharacterDetails(
-                        characterId = character.id,
-                        characterName = character.name
-                    )
-                }
-            )
-            episodeScreen()
-            locationScreen()
-            characterDetailsScreen(
-                onBackPressed = navController::popBackStack
-            )
+            NavHost(
+                navController = navController,
+                startDestination = startDestination,
+                modifier = modifier
+                    .background(Color.Alabaster)
+                    .padding(paddingValues),
+                enterTransition = { fadeIn() },
+                exitTransition = { fadeOut() },
+            ) {
+                characterScreen(
+                    onCharacterClicked = { character ->
+                        navController.navigateToCharacterDetails(
+                            characterId = character.id,
+                            characterName = character.name
+                        )
+                    }
+                )
+                episodeScreen()
+                locationScreen()
+                characterDetailsScreen(
+                    onBackPressed = navController::popBackStack
+                )
+            }
+        }
+    }
+}
+
+inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
+    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
+) {
+    composable<T> { backStackEntry ->
+        CompositionLocalProvider(
+            LocalNavAnimatedVisibilityScope provides this,
+        ) {
+            content(backStackEntry)
         }
     }
 }

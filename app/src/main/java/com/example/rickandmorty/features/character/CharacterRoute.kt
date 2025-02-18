@@ -42,6 +42,7 @@ import coil.request.ImageRequest
 import com.example.rickandmorty.R
 import com.example.rickandmorty.components.base.RickAndMortyOrbitLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
+import com.example.rickandmorty.components.utils.sharedElement
 import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.features.theme.LocalBottomBarManager
 import com.example.rickandmorty.features.theme.LocalTopBarManager
@@ -76,7 +77,6 @@ fun CharacterScreen(
     val bottomBarManager = LocalBottomBarManager.current
     val topBarManager = LocalTopBarManager.current
     val lazyListState = rememberLazyListState()
-    var isLoading by remember { mutableStateOf(true) }
     val title = stringResource(R.string.characters)
 
     LaunchedEffect(Unit) {
@@ -88,8 +88,6 @@ fun CharacterScreen(
                 showTitle = true
             )
         )
-        delay(1000)
-        isLoading = false
     }
 
     val shouldPaginate by remember {
@@ -106,31 +104,19 @@ fun CharacterScreen(
             onLoadMore()
         }
     }
-
-    if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.DarkGray),
-            contentAlignment = Alignment.Center
-        ) {
-            RickAndMortyOrbitLoading()
-        }
-    } else {
-        LazyColumn(
-            state = lazyListState,
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color.DarkGray),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(4.dp)
-        ) {
-            items(state.characters) { character ->
-                CharactersCard(
-                    character = character,
-                    onCharacterClicked = onCharacterClicked
-                )
-            }
+    LazyColumn(
+        state = lazyListState,
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.DarkGray),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(4.dp)
+    ) {
+        items(state.characters) { character ->
+            CharactersCard(
+                character = character,
+                onCharacterClicked = onCharacterClicked
+            )
         }
     }
 }
@@ -155,7 +141,11 @@ fun CharactersCard(
                     .crossfade(true)
                     .build(),
                 contentDescription = null,
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier
+                    .size(100.dp)
+                    .sharedElement(
+                        key = character.id.toString(),
+                    )
             )
 
             Column(

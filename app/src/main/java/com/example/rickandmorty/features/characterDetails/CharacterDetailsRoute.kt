@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,6 +40,7 @@ import coil.request.ImageRequest
 import com.example.rickandmorty.R
 import com.example.rickandmorty.components.base.RickAndMortyOrbitLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
+import com.example.rickandmorty.components.utils.sharedElement
 import com.example.rickandmorty.features.theme.LocalTopBarManager
 import kotlinx.coroutines.delay
 
@@ -70,7 +72,6 @@ fun CharacterDetailsScreen(
     onBackPressed: () -> Unit = {},
 ) {
     val topBarManager = LocalTopBarManager.current
-    var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         topBarManager.showTopBar()
@@ -82,24 +83,11 @@ fun CharacterDetailsScreen(
                 onBackClicked = onBackPressed
             )
         )
-        delay(1000)
-        isLoading = false
     }
-    if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.DarkGray),
-            contentAlignment = Alignment.Center
-        ) {
-            RickAndMortyOrbitLoading()
-        }
-    } else {
         CharacterDetailsContent(
             state = state,
             modifier = modifier
         )
-    }
 }
 
 @Composable
@@ -151,7 +139,10 @@ fun CharacterDetailsContent(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                modifier = Modifier,
+                modifier = Modifier
+                    .sharedElement(
+                        key = state.character.id.toString(),
+                    ),
                 painter = painter,
                 contentDescription = null
             )
