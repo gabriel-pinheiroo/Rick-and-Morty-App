@@ -23,7 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,10 +38,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.rickandmorty.components.base.RickAndMortyLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.features.theme.LocalBottomBarManager
 import com.example.rickandmorty.features.theme.LocalTopBarManager
+import kotlinx.coroutines.delay
 
 @Composable
 fun CharacterRoute(
@@ -70,6 +74,7 @@ fun CharacterScreen(
     val bottomBarManager = LocalBottomBarManager.current
     val topBarManager = LocalTopBarManager.current
     val lazyListState = rememberLazyListState()
+    var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         bottomBarManager.showBottomBar()
@@ -80,6 +85,8 @@ fun CharacterScreen(
                 showTitle = true
             )
         )
+        delay(1000)
+        isLoading = false
     }
 
     val shouldPaginate by remember {
@@ -97,19 +104,32 @@ fun CharacterScreen(
         }
     }
 
-    LazyColumn(
-        state = lazyListState,
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.DarkGray),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(4.dp)
-    ) {
-        items(state.characters) { character ->
-            CharactersCard(
-                character = character,
-                onCharacterClicked = onCharacterClicked
+    if (isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.DarkGray),
+            contentAlignment = Alignment.Center
+        ) {
+            RickAndMortyLoading(
+                size = 16.dp,
             )
+        }
+    } else {
+        LazyColumn(
+            state = lazyListState,
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color.DarkGray),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(4.dp)
+        ) {
+            items(state.characters) { character ->
+                CharactersCard(
+                    character = character,
+                    onCharacterClicked = onCharacterClicked
+                )
+            }
         }
     }
 }

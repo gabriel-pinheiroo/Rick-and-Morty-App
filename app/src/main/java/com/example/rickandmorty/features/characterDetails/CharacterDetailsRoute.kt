@@ -71,8 +71,6 @@ fun CharacterDetailsScreen(
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        delay(1000)
-        isLoading = false
         topBarManager.showTopBar()
         topBarManager.setTopBarConfig(
             config = TopBarConfig(
@@ -82,6 +80,8 @@ fun CharacterDetailsScreen(
                 onBackClicked = onBackPressed
             )
         )
+        delay(1000)
+        isLoading = false
     }
     if (isLoading) {
         Box(
