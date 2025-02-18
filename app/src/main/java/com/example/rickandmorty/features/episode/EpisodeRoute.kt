@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.rickandmorty.R
-import com.example.rickandmorty.components.base.RickAndMortyLoading
+import com.example.rickandmorty.components.base.RickAndMortyOrbitLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.domain.models.Episode
 import com.example.rickandmorty.features.theme.LocalBottomBarManager
@@ -102,9 +102,7 @@ fun EpisodeScreen(
                 .background(Color.DarkGray),
             contentAlignment = Alignment.Center
         ) {
-            RickAndMortyLoading(
-                size = 16.dp,
-            )
+            RickAndMortyOrbitLoading()
         }
     } else {
         LazyColumn(

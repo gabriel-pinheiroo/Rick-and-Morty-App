@@ -40,7 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.rickandmorty.R
-import com.example.rickandmorty.components.base.RickAndMortyLoading
+import com.example.rickandmorty.components.base.RickAndMortyOrbitLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.features.theme.LocalBottomBarManager
@@ -114,9 +114,7 @@ fun CharacterScreen(
                 .background(Color.DarkGray),
             contentAlignment = Alignment.Center
         ) {
-            RickAndMortyLoading(
-                size = 16.dp,
-            )
+            RickAndMortyOrbitLoading()
         }
     } else {
         LazyColumn(

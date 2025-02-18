@@ -37,7 +37,7 @@ import coil.Coil
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.rickandmorty.R
-import com.example.rickandmorty.components.base.RickAndMortyLoading
+import com.example.rickandmorty.components.base.RickAndMortyOrbitLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.features.theme.LocalTopBarManager
 import kotlinx.coroutines.delay
@@ -92,9 +92,7 @@ fun CharacterDetailsScreen(
                 .background(Color.DarkGray),
             contentAlignment = Alignment.Center
         ) {
-            RickAndMortyLoading(
-                size = 16.dp,
-            )
+            RickAndMortyOrbitLoading()
         }
     } else {
         CharacterDetailsContent(
