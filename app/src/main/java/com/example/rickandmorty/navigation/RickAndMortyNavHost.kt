@@ -57,7 +57,7 @@ fun RickAndMortyNavHost(
                 navController = navController,
                 startDestination = startDestination,
                 modifier = modifier
-                    .background(Color.Alabaster)
+                    .background(Color.DarkGray)
                     .padding(paddingValues),
                 enterTransition = { fadeIn() },
                 exitTransition = { fadeOut() },
