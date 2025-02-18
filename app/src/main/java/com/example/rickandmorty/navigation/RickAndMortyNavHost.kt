@@ -1,11 +1,16 @@
 package com.example.rickandmorty.navigation
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
@@ -19,7 +24,16 @@ import com.example.rickandmorty.features.episode.navigation.episodeScreen
 import com.example.rickandmorty.features.location.navigation.locationScreen
 import com.example.rickandmorty.ui.theme.Alabaster
 
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> {
+    null
+}
 
+val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> {
+    null
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun RickAndMortyNavHost(
     modifier: Modifier = Modifier,
@@ -28,28 +42,29 @@ fun RickAndMortyNavHost(
     startDestination: Routes = Routes.Character,
     onMenuSelected: (BottomBarMenuItem) -> Unit,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
-            .background(Color.Alabaster)
-            .padding(paddingValues),
-        enterTransition = { fadeIn() },
-        exitTransition = { fadeOut() },
-    ) {
-        characterScreen(
-            onCharacterClicked = { character ->
-                navController.navigateToCharacterDetails(
-                    characterId = character.id,
-                    characterName = character.name
-                )
-            }
-        )
-        episodeScreen()
-        locationScreen()
-        characterDetailsScreen(
-            onBackPressed = navController::popBackStack
-        )
+    SharedTransitionLayout {
+        NavHost(
+            navController = navController,
+            startDestination = startDestination,
+            modifier = modifier
+                .background(Color.Alabaster)
+                .padding(paddingValues),
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+        ) {
+            characterScreen(
+                onCharacterClicked = { character ->
+                    navController.navigateToCharacterDetails(
+                        characterId = character.id,
+                        characterName = character.name
+                    )
+                }
+            )
+            episodeScreen()
+            locationScreen()
+            characterDetailsScreen(
+                onBackPressed = navController::popBackStack
+            )
+        }
     }
-
 }
