@@ -25,11 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.rickandmorty.R
 import com.example.rickandmorty.components.base.RickAndMortyLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.domain.models.Location
@@ -63,13 +65,14 @@ fun LocationScreen(
     val topBarManager = LocalTopBarManager.current
     val lazyListState = rememberLazyListState()
     var isLoading by remember { mutableStateOf(true) }
+    val title = stringResource(id = R.string.locations)
 
     LaunchedEffect(Unit) {
         bottomBarManager.showBottomBar()
         topBarManager.showTopBar()
         topBarManager.setTopBarConfig(
             TopBarConfig(
-                title = "Locations",
+                title = title,
                 showTitle = true
             )
         )
@@ -144,7 +147,7 @@ private fun LocationCard(location: Location) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Location type:",
+                text = stringResource(R.string.location_type),
                 color = Color.White,
                 fontSize = 16.sp
             )
@@ -162,7 +165,7 @@ private fun LocationCard(location: Location) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Dimension:",
+                text = stringResource(R.string.dimension),
                 color = Color.White,
                 fontSize = 16.sp
             )

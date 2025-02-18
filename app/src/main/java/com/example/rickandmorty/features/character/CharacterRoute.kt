@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.rickandmorty.R
 import com.example.rickandmorty.components.base.RickAndMortyLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.domain.models.Character
@@ -75,13 +77,14 @@ fun CharacterScreen(
     val topBarManager = LocalTopBarManager.current
     val lazyListState = rememberLazyListState()
     var isLoading by remember { mutableStateOf(true) }
+    val title = stringResource(R.string.characters)
 
     LaunchedEffect(Unit) {
         bottomBarManager.showBottomBar()
         topBarManager.showTopBar()
         topBarManager.setTopBarConfig(
             TopBarConfig(
-                title = "Characters",
+                title = title,
                 showTitle = true
             )
         )
@@ -181,9 +184,9 @@ fun CharactersCard(
                         modifier = Modifier
                             .size(6.dp)
                             .background(
-                                color = if (character.status == "Alive") {
+                                color = if (character.status == stringResource(R.string.alive)) {
                                     Color.Green
-                                } else if (character.status == "Dead") {
+                                } else if (character.status == stringResource(R.string.dead)) {
                                     Color.Red
                                 } else {
                                     Color.Black

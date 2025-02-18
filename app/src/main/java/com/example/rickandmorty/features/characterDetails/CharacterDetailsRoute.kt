@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +36,7 @@ import androidx.palette.graphics.Palette
 import coil.Coil
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.rickandmorty.R
 import com.example.rickandmorty.components.base.RickAndMortyLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.features.theme.LocalTopBarManager
@@ -166,9 +168,9 @@ fun CharacterDetailsContent(
                 modifier = Modifier
                     .size(6.dp)
                     .background(
-                        color = if (state.character.status == "Alive") {
+                        color = if (state.character.status == stringResource(R.string.alive)) {
                             Color.Green
-                        } else if (state.character.status == "Dead") {
+                        } else if (state.character.status == stringResource(R.string.dead)) {
                             Color.Red
                         } else {
                             Color.Black
@@ -196,7 +198,7 @@ fun CharacterDetailsContent(
                 .padding(start = 16.dp, top = 24.dp)
         ) {
             Text(
-                text = "Species:",
+                text = stringResource(R.string.species),
                 color = Color.Gray,
                 fontSize = 16.sp,
             )
@@ -212,7 +214,7 @@ fun CharacterDetailsContent(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Gender:",
+                text = stringResource(R.string.gender),
                 color = Color.Gray,
                 fontSize = 16.sp,
             )
@@ -230,7 +232,7 @@ fun CharacterDetailsContent(
             )
 
             Text(
-                text = "Last known location:",
+                text = stringResource(R.string.last_known_location),
                 color = Color.Gray,
                 fontSize = 16.sp,
             )
@@ -246,7 +248,7 @@ fun CharacterDetailsContent(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "First seen in:",
+                text = stringResource(R.string.first_seen_in),
                 color = Color.Gray,
                 fontSize = 16.sp,
             )

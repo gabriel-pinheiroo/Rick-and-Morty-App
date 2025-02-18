@@ -25,11 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.rickandmorty.R
 import com.example.rickandmorty.components.base.RickAndMortyLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.domain.models.Episode
@@ -63,13 +65,14 @@ fun EpisodeScreen(
     val topBarManager = LocalTopBarManager.current
     val lazyListState = rememberLazyListState()
     var isLoading by remember { mutableStateOf(true) }
+    val title = stringResource(id = R.string.episodes)
 
     LaunchedEffect(Unit) {
         bottomBarManager.showBottomBar()
         topBarManager.showTopBar()
         topBarManager.setTopBarConfig(
             TopBarConfig(
-                title = "Episodes",
+                title = title,
                 showTitle = true
             )
         )
@@ -152,7 +155,7 @@ private fun EpisodeCard(episode: Episode) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Episode air date:",
+                text = stringResource(R.string.episode_air_date),
                 color = Color.Gray,
                 fontSize = 16.sp
             )
