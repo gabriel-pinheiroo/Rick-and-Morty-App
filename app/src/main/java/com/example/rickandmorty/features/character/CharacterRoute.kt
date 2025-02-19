@@ -23,9 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -101,6 +99,7 @@ fun CharacterScreen(
 
     LaunchedEffect(shouldPaginate) {
         if (shouldPaginate) {
+            delay(1000)
             onLoadMore()
         }
     }
@@ -117,6 +116,21 @@ fun CharacterScreen(
                 character = character,
                 onCharacterClicked = onCharacterClicked
             )
+        }
+
+        if (state.isPaginating) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    RickAndMortyOrbitLoading(
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+            }
         }
     }
 }
