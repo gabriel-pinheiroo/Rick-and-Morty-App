@@ -7,5 +7,5 @@ class EpisodeUseCase @Inject constructor(
     private val episodeRepository: EpisodeRepository
 ) {
 
-    suspend fun getEpisodes() = episodeRepository.getEpisodes()
+    suspend fun getEpisodes(page: Int) = episodeRepository.getEpisodes(page = page)
 }

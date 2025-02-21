@@ -9,10 +9,10 @@ import javax.inject.Inject
 class EpisodeRepositoryImpl @Inject constructor(
     private val api: EpisodeService
 ): EpisodeRepository {
-    override suspend fun getEpisodes(): Result<List<Episode>> {
+    override suspend fun getEpisodes(page: Int): Result<List<Episode>> {
         return try {
 
-            val result = api.getEpisodes()
+            val result = api.getEpisodes(page = page)
                 .results
                 .orEmpty()
                 .map { response ->

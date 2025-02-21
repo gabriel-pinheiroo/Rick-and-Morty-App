@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EpisodeViewModel @Inject constructor(
     private val useCase: EpisodeUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(EpisodeState.Idle)
     val state = _state
@@ -26,18 +26,35 @@ class EpisodeViewModel @Inject constructor(
             initialValue = EpisodeState.Idle,
         )
 
+    private var currentPage = 1
+    private var isLastPage = false
+
     private fun getEpisodes() {
+        if (isLastPage) return
         viewModelScope.launch {
-            _state.update{ it.onLoading() }
+            _state.update { it.onLoading() }
             try {
-                val episodes = useCase.getEpisodes().getOrThrow()
-                _state.update { it.onEpisodesLoaded(episodes) }
+                val episodes = useCase.getEpisodes(page = currentPage).getOrThrow()
+                if (episodes.isEmpty()) {
+                    isLastPage = true
+                } else {
+                    _state.update { currentState ->
+                        currentState.onEpisodesLoaded(
+                            (currentState.episodes + episodes).distinctBy { it.id }
+                        )
+                    }
+                    currentPage++
+                }
             } catch (e: Throwable) {
                 println("Could not get episodes. ex: $e")
                 _state.update { it.onLoadingFinished() }
-            }finally {
+            } finally {
                 _state.update { it.onLoadingFinished() }
             }
         }
+    }
+
+    fun loadMoreEpisodes() {
+        getEpisodes()
     }
 }

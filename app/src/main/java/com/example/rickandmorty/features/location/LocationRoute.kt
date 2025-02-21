@@ -4,16 +4,15 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,9 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.rickandmorty.R
@@ -66,7 +64,7 @@ fun LocationScreen(
 
     val bottomBarManager = LocalBottomBarManager.current
     val topBarManager = LocalTopBarManager.current
-    val lazyListState = rememberLazyListState()
+    val lazyListState = rememberLazyStaggeredGridState()
     var isLoading by remember { mutableStateOf(true) }
     val title = stringResource(id = R.string.locations)
 
@@ -108,78 +106,37 @@ fun LocationScreen(
             RickAndMortyOrbitLoading()
         }
     } else {
-        LazyColumn(
+        LazyVerticalStaggeredGrid(
             state = lazyListState,
+            columns = StaggeredGridCells.Adaptive(150.dp),
             modifier = modifier
                 .fillMaxSize()
                 .background(Color.DarkGray),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalItemSpacing = 8.dp,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
             contentPadding = PaddingValues(4.dp)
         ) {
             items(state.locations) { location ->
-                LocationCard(location)
+                LocationCardListItem(location)
             }
         }
     }
 }
 
 @Composable
-private fun LocationCard(location: Location) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.Black)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxSize()
-        ) {
-            Text(
-                text = location.name,
-                modifier = Modifier
-                    .fillMaxSize(),
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(R.string.location_type),
-                color = Color.White,
-                fontSize = 16.sp
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = location.type,
-                modifier = Modifier
-                    .fillMaxSize(),
-                color = Color.White,
-                fontSize = 16.sp
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = stringResource(R.string.dimension),
-                color = Color.White,
-                fontSize = 16.sp
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = location.dimension,
-                modifier = Modifier
-                    .fillMaxSize(),
-                color = Color.White,
-                fontSize = 16.sp
-            )
-        }
-    }
+fun LocationCardListItem(
+    location: Location
+) {
+    ListItem(
+        headlineContent = { Text(location.name, fontWeight = Bold) },
+        supportingContent = { Text(location.dimension) },
+        overlineContent = { Text(location.type) },
+        colors = ListItemDefaults.colors(
+            containerColor = Color.Gray,
+            headlineColor = Color.White,
+            supportingColor = Color.White,
+            overlineColor = Color.White
+        ),
+        modifier = Modifier.clip(RoundedCornerShape(8.dp))
+    )
 }
