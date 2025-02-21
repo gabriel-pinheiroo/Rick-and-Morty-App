@@ -1,5 +1,6 @@
 package com.example.rickandmorty.features.location
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,6 +47,8 @@ fun LocationRoute(
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    BackHandler {}
 
     LocationScreen(
         modifier = modifier,
