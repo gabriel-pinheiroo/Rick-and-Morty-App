@@ -2,6 +2,7 @@ package com.example.rickandmorty.features.character
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rickandmorty.database.CharacterDao
 import com.example.rickandmorty.domain.use_cases.CharacterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -15,11 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterViewModel @Inject constructor(
-    private val characterUseCase: CharacterUseCase
+    private val characterUseCase: CharacterUseCase,
+    private val characterDao: CharacterDao
 ) : ViewModel() {
 
     private enum class FETCH_CARACTERS_REASON {
-        INITAL,
+        INITIAL,
         PAGINATING
     }
 
@@ -35,12 +37,12 @@ class CharacterViewModel @Inject constructor(
     private var currentPage = 1
     private var isLastPage = false
 
-    private fun getCharacters(reason: FETCH_CARACTERS_REASON = FETCH_CARACTERS_REASON.INITAL) {
+    private fun getCharacters(reason: FETCH_CARACTERS_REASON = FETCH_CARACTERS_REASON.INITIAL) {
         if (isLastPage) return
         viewModelScope.launch {
             _state.update {
                 when (reason) {
-                    FETCH_CARACTERS_REASON.INITAL -> it.onLoading()
+                    FETCH_CARACTERS_REASON.INITIAL -> it.onLoading()
                     FETCH_CARACTERS_REASON.PAGINATING -> it.onPaginating()
                 }
             }

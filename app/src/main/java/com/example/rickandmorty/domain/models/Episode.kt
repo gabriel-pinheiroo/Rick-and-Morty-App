@@ -1,7 +1,7 @@
 package com.example.rickandmorty.domain.models
 
 data class Episode(
-    val air_date: String = "",
+    val airDate: String = "",
     val characters: List<String> = emptyList(),
     val created: String = "",
     val episode: String = "",

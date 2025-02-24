@@ -21,7 +21,7 @@ data class Result(
     val url: String? = null
 ) {
     fun toEpisode() = Episode(
-        air_date = airDate.orEmpty(),
+        airDate = airDate.orEmpty(),
         characters = characters.orEmpty(),
         created = created.orEmpty(),
         episode = episode.orEmpty(),

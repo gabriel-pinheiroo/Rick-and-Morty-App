@@ -5,6 +5,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("plugin.serialization") version "2.0.10"
     id("kotlin-parcelize")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -121,4 +122,8 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.7.0-alpha07")
     implementation("androidx.compose.animation:animation:1.7.0-alpha07")
     implementation("androidx.compose.foundation:foundation:1.7.0-alpha07")
+    implementation("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-paging:2.6.1")
 }

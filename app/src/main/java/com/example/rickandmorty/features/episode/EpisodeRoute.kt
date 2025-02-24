@@ -130,7 +130,7 @@ fun EpisodeListItem(
 ) {
     ListItem(
         headlineContent = { Text(episode.name, fontWeight = Bold) },
-        supportingContent = { Text(episode.air_date) },
+        supportingContent = { Text(episode.airDate) },
         overlineContent = { Text(episode.episode) },
         colors = ListItemDefaults.colors(
             containerColor = Color.Gray,

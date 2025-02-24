@@ -14,6 +14,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,11 +43,10 @@ import coil.Coil
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.rickandmorty.R
-import com.example.rickandmorty.components.base.RickAndMortyOrbitLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.components.utils.sharedElement
+import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.features.theme.LocalTopBarManager
-import kotlinx.coroutines.delay
 
 @Composable
 fun CharacterDetailsRoute(
@@ -60,7 +64,9 @@ fun CharacterDetailsRoute(
         modifier = modifier,
         state = state,
         characterName = characterName,
-        onBackPressed = onBackPressed
+        onBackPressed = onBackPressed,
+        updateFavorite = viewModel::updateFavorite,
+        insertCharacter = viewModel::insertCharacter
     )
 }
 
@@ -70,6 +76,8 @@ fun CharacterDetailsScreen(
     characterName: String = "",
     state: CharacterDetailsState = CharacterDetailsState.IDLE,
     onBackPressed: () -> Unit = {},
+    insertCharacter: (Character) -> Unit = {},
+    updateFavorite: (Int) -> Unit = {},
 ) {
     val topBarManager = LocalTopBarManager.current
 
@@ -86,7 +94,9 @@ fun CharacterDetailsScreen(
     }
         CharacterDetailsContent(
             state = state,
-            modifier = modifier
+            modifier = modifier,
+            updateFavorite = updateFavorite,
+            insertCharacter = insertCharacter
         )
 }
 
@@ -94,6 +104,8 @@ fun CharacterDetailsScreen(
 fun CharacterDetailsContent(
     modifier: Modifier = Modifier,
     state: CharacterDetailsState = CharacterDetailsState.IDLE,
+    updateFavorite: (Int) -> Unit = {},
+    insertCharacter: (Character) -> Unit = {},
 ) {
 
     val context = LocalContext.current
@@ -186,6 +198,26 @@ fun CharacterDetailsContent(
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 24.dp)
         ) {
+
+            IconToggleButton(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .background(Color.White.copy(alpha = 0.9f), shape = CircleShape),
+                checked = state.character.isFavorite,
+                onCheckedChange = {
+                    updateFavorite(state.character.id)
+                }
+            ) {
+                Icon(
+                    modifier = Modifier.size(28.dp),
+                    imageVector =
+                    if (state.character.isFavorite) Icons.Default.Favorite
+                    else Icons.Filled.FavoriteBorder,
+                    contentDescription = "Favorite",
+                    tint = Color.Black
+                )
+            }
+
             Text(
                 text = stringResource(R.string.species),
                 color = Color.Gray,
