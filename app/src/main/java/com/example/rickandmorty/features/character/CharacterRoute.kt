@@ -114,7 +114,10 @@ fun CharacterScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(4.dp)
     ) {
-        items(state.characters) { character ->
+        items(
+            items = state.characters,
+            key = { character -> character.id }
+        ) { character ->
             CharactersCard(
                 character = character,
                 onCharacterClicked = onCharacterClicked

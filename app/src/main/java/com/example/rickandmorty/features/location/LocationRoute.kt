@@ -116,7 +116,10 @@ fun LocationScreen(
             horizontalArrangement = Arrangement.spacedBy(5.dp),
             contentPadding = PaddingValues(4.dp)
         ) {
-            items(state.locations) { location ->
+            items(
+                items = state.locations,
+                key = { location -> location.id }
+            ) { location ->
                 LocationCardListItem(location)
             }
         }

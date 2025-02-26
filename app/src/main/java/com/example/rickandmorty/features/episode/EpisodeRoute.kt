@@ -117,7 +117,10 @@ fun EpisodeScreen(
             horizontalArrangement = Arrangement.spacedBy(5.dp),
             contentPadding = PaddingValues(4.dp)
         ) {
-            items(state.episodes) { episode ->
+            items(
+                items = state.episodes,
+                key = { episode -> episode.id }
+            ) { episode ->
                 EpisodeListItem(episode)
             }
         }
