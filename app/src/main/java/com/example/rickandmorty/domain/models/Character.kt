@@ -23,23 +23,6 @@ data class Character(
     companion object {
         val EMPTY = Character()
     }
-
-    fun Character.toEntity(): CharacterEntity {
-        return CharacterEntity(
-            created = created,
-            episode = episode,
-            gender = gender,
-            id = id,
-            image = image,
-            location = location,
-            name = name,
-            origin = origin,
-            url = url,
-            status = status,
-            species = species,
-            type = type,
-        )
-    }
 }
 
 data class CharacterLocationModel(

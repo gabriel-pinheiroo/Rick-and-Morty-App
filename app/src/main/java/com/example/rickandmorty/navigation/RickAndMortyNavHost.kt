@@ -79,15 +79,3 @@ fun RickAndMortyNavHost(
         }
     }
 }
-
-inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
-    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
-) {
-    composable<T> { backStackEntry ->
-        CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this,
-        ) {
-            content(backStackEntry)
-        }
-    }
-}
