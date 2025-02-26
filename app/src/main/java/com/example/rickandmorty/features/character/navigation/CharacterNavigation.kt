@@ -9,7 +9,6 @@ import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.features.character.CharacterRoute
 import com.example.rickandmorty.navigation.LocalNavAnimatedVisibilityScope
 import com.example.rickandmorty.navigation.Routes
-import com.example.rickandmorty.navigation.animatedComposable
 
 fun NavController.navigateToCharacter(topLevelNavOptions: NavOptions) {
     navigate(route = Routes.Character)
