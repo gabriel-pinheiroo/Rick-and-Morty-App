@@ -66,7 +66,6 @@ fun CharacterDetailsRoute(
         characterName = characterName,
         onBackPressed = onBackPressed,
         updateFavorite = viewModel::updateFavorite,
-        insertCharacter = viewModel::insertCharacter
     )
 }
 
@@ -76,8 +75,7 @@ fun CharacterDetailsScreen(
     characterName: String = "",
     state: CharacterDetailsState = CharacterDetailsState.IDLE,
     onBackPressed: () -> Unit = {},
-    insertCharacter: (Character) -> Unit = {},
-    updateFavorite: (Int) -> Unit = {},
+    updateFavorite: () -> Unit = {},
 ) {
     val topBarManager = LocalTopBarManager.current
 
@@ -96,7 +94,6 @@ fun CharacterDetailsScreen(
             state = state,
             modifier = modifier,
             updateFavorite = updateFavorite,
-            insertCharacter = insertCharacter
         )
 }
 
@@ -104,8 +101,7 @@ fun CharacterDetailsScreen(
 fun CharacterDetailsContent(
     modifier: Modifier = Modifier,
     state: CharacterDetailsState = CharacterDetailsState.IDLE,
-    updateFavorite: (Int) -> Unit = {},
-    insertCharacter: (Character) -> Unit = {},
+    updateFavorite: () -> Unit = {},
 ) {
 
     val context = LocalContext.current
@@ -205,7 +201,7 @@ fun CharacterDetailsContent(
                     .background(Color.White.copy(alpha = 0.9f), shape = CircleShape),
                 checked = state.character.isFavorite,
                 onCheckedChange = {
-                    updateFavorite(state.character.id)
+                    updateFavorite()
                 }
             ) {
                 Icon(

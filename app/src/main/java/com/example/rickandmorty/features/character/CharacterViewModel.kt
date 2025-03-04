@@ -17,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterViewModel @Inject constructor(
     private val characterUseCase: CharacterUseCase,
-    private val characterDao: CharacterDao
 ) : ViewModel() {
 
     private enum class FETCH_CARACTERS_REASON {

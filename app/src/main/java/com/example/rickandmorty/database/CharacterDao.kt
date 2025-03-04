@@ -10,21 +10,21 @@ import com.example.rickandmorty.domain.models.Character
 interface CharacterDao {
 
     @Query("SELECT * FROM characters")
-    suspend fun getAllCharacters(): List<Character>
+    suspend fun getAllCharacters(): List<CharacterEntity>
 
     @Query("SELECT * FROM characters WHERE isFavorite = 1 ")
-    suspend fun getFavoriteCharacters(): List<Character>
+    suspend fun getFavoriteCharacters(): List<CharacterEntity>
 
     @Query("DELETE FROM characters WHERE id = :id")
     suspend fun deleteCharacterById(id: Int)
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCharacters(characters: Character)
+    suspend fun insertCharacters(characters: CharacterEntity)
 
     @Query("UPDATE characters SET isFavorite=:isFavorite WHERE id = :id")
     suspend fun updateFavorite(isFavorite: Boolean?, id: Int)
 
     @Query("SELECT * FROM characters WHERE id = :id")
-    suspend fun getCharacterById(id: Int): Character
+    suspend fun getCharacterByIdDao(id: Int): CharacterEntity?
 }

@@ -1,14 +1,9 @@
 package com.example.rickandmorty.domain.models
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "characters")
 data class Character(
     val created: String = "",
     val episode: List<String> = emptyList(),
     val gender: String = "",
-    @PrimaryKey(autoGenerate = false)
     val id: Int = 0,
     val image: String = "",
     val location: CharacterLocationModel = CharacterLocationModel.EMPTY,

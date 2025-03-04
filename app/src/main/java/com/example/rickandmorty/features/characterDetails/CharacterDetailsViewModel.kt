@@ -2,8 +2,6 @@ package com.example.rickandmorty.features.characterDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rickandmorty.database.CharacterDao
-import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.domain.use_cases.CharacterUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,7 +17,6 @@ import kotlinx.coroutines.launch
 @HiltViewModel(assistedFactory = CharacterDetailsViewModel.Factory::class)
 class CharacterDetailsViewModel @AssistedInject constructor(
     private val useCase: CharacterUseCase,
-    private val characterDao: CharacterDao,
     @Assisted private val characterId: Int
 ): ViewModel() {
 
@@ -43,43 +40,40 @@ class CharacterDetailsViewModel @AssistedInject constructor(
         _state.update { it.onLoading() }
         viewModelScope.launch {
             try {
-                val localCharacter = characterDao.getCharacterById(characterId)
-                if (localCharacter != null) {
-                    _state.update { it.onLoadCharacter(localCharacter) }
-                    return@launch
+                val localCharacter = useCase.getCharacterByIdDao(characterId).getOrNull()
+                val finalCharacter = if (localCharacter != null) {
+                    localCharacter
+                } else {
+                    val remoteCharacter = useCase.getCharacterById(characterId).getOrThrow()
+                    remoteCharacter
                 }
-                val character = useCase.getCharacterById(characterId).getOrThrow()
-                _state.update { it.onLoadCharacter(character) }
+
+                _state.update { it.onLoadCharacter(finalCharacter) }
             } catch (e: Throwable) {
-                println("Could not get character. ex: $e")
+                println("Could not get character: $e")
             } finally {
                 _state.update { it.onLoadingFinished() }
             }
         }
     }
 
-
-    fun insertCharacter(character: Character) {
+    fun updateFavorite() {
         viewModelScope.launch {
-            characterDao.insertCharacters(character)
-        }
-    }
+            try {
+                val currentCharacter = state.value.character
+                val newFavoriteStatus = !currentCharacter.isFavorite
+                val updatedCharacter = currentCharacter.copy(isFavorite = newFavoriteStatus)
 
-    fun updateFavorite(id: Int) {
-        viewModelScope.launch {
-            val currentCharacter = state.value.character
-            val newFavoriteStatus = !currentCharacter.isFavorite
+                if (newFavoriteStatus) {
+                    useCase.insertCharacter(updatedCharacter)
+                    useCase.updateFavorite(updatedCharacter)
+                } else {
+                    useCase.deleteFavoriteCharacter(currentCharacter.id)
+                }
 
-            if (newFavoriteStatus) {
-                characterDao.insertCharacters(currentCharacter.copy(isFavorite = true))
-            } else {
-                characterDao.deleteCharacterById(id)
-            }
-
-            _state.update { currentState ->
-                currentState.copy(
-                    character = currentState.character.copy(isFavorite = newFavoriteStatus)
-                )
+                _state.update { it.onLoadCharacter(updatedCharacter) }
+            } catch (e: Exception) {
+                println("Error updating favorite status: $e")
             }
         }
     }
