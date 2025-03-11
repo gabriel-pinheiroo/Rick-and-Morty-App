@@ -12,4 +12,5 @@
     <string name="locations">Locations</string>
     <string name="location_type">Location type:</string>
     <string name="dimension">Dimension:</string>
+    <string name="favorite_characters">Favorite Characters</string>
 </resources>

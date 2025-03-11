@@ -10,4 +10,5 @@ interface CharacterRepository {
     suspend fun deleteFavoriteCharacter(id: Int): Result<Character>
     suspend fun getCharacterByIdDao(id: Int): Result<Character>
     suspend fun updateFavorite(isFavorite: Boolean?, id: Int): Result<Character>
+    suspend fun getAllFavoriteCharacters(): Result<List<Character>>
 }

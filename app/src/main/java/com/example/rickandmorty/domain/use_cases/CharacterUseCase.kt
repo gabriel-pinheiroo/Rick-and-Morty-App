@@ -14,4 +14,5 @@ class CharacterUseCase @Inject constructor(
     suspend fun deleteFavoriteCharacter(id: Int) = characterRepository.deleteFavoriteCharacter(id = id)
     suspend fun getCharacterByIdDao(id: Int) = characterRepository.getCharacterByIdDao(id = id)
     suspend fun updateFavorite(character: Character) = characterRepository.updateFavorite(isFavorite = character.isFavorite, id = character.id)
+    suspend fun getAllFavoriteCharacters() = characterRepository.getAllFavoriteCharacters()
 }

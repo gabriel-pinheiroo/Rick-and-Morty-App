@@ -18,4 +18,7 @@ sealed interface Routes {
 
     @Serializable
     data class CharacterDetails(val args: CharacterDetailsArgs): Routes
+
+    @Serializable
+    data object FavoriteCharacters: Routes
 }

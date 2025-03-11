@@ -80,4 +80,16 @@ class CharacterRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun getAllFavoriteCharacters(): Result<List<Character>> {
+        return try {
+            val result = characterDao.getAllCharacters()
+                .map { entity ->
+                    entity.toCharacter()
+                }
+            Result.success(result)
+        } catch (e: SQLException) {
+            Result.failure(e)
+        }
+    }
 }

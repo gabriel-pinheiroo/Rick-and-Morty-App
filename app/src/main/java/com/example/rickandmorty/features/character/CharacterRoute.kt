@@ -52,6 +52,7 @@ fun CharacterRoute(
     modifier: Modifier = Modifier,
     viewModel: CharacterViewModel = hiltViewModel(),
     onCharacterClicked: (Character) -> Unit = {},
+    onFavoriteClicked: () -> Unit = {},
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -64,7 +65,8 @@ fun CharacterRoute(
         onLoadMore = {
             viewModel.loadMoreCharacters()
         },
-        onCharacterClicked = onCharacterClicked
+        onCharacterClicked = onCharacterClicked,
+        onFavoriteClicked = onFavoriteClicked
     )
 }
 
@@ -74,6 +76,7 @@ fun CharacterScreen(
     state: CharacterState = CharacterState.Idle,
     onLoadMore: () -> Unit = {},
     onCharacterClicked: (Character) -> Unit = {},
+    onFavoriteClicked: () -> Unit = {},
 ) {
     val bottomBarManager = LocalBottomBarManager.current
     val topBarManager = LocalTopBarManager.current
@@ -86,7 +89,9 @@ fun CharacterScreen(
         topBarManager.setTopBarConfig(
             TopBarConfig(
                 title = title,
-                showTitle = true
+                showTitle = true,
+                showFavoriteButton = true,
+                onFavoriteClicked = onFavoriteClicked
             )
         )
     }

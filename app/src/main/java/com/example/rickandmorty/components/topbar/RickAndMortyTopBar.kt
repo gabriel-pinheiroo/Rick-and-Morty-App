@@ -12,7 +12,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,6 +26,8 @@ data class TopBarConfig(
     var showTitle: Boolean = false,
     var showBackButton: Boolean = false,
     var onBackClicked: () -> Unit = {},
+    var showFavoriteButton: Boolean = false,
+    var onFavoriteClicked: () -> Unit = {},
 )
 
 @Composable
@@ -68,6 +70,23 @@ fun RickAndMortyTopBar(
                     color = Color.LightGray,
                     fontSize = 24.sp,
                     modifier = Modifier.align(Alignment.Center),
+                )
+            }
+
+            if (config.showFavoriteButton) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "Favorite",
+                    tint = Color.LightGray,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 24.dp)
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                        ) {
+                            config.onFavoriteClicked()
+                        }
                 )
             }
         }

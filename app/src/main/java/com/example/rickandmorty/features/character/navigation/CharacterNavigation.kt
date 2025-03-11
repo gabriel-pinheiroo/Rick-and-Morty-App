@@ -16,6 +16,7 @@ fun NavController.navigateToCharacter(topLevelNavOptions: NavOptions) {
 
 fun NavGraphBuilder.characterScreen(
     onCharacterClicked: (Character) -> Unit = {},
+    onFavoriteClicked: () -> Unit = {},
 ) {
     composable<Routes.Character> {
         CompositionLocalProvider(
@@ -23,6 +24,7 @@ fun NavGraphBuilder.characterScreen(
         ) {
             CharacterRoute(
                 onCharacterClicked = onCharacterClicked,
+                onFavoriteClicked = onFavoriteClicked
             )
         }
     }

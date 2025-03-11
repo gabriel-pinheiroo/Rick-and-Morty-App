@@ -35,6 +35,7 @@ class RickAndMortyAppState(
 
     private val fullScreenDestinations: Set<String> = setOf(
         Routes.CharacterDetails::class.java.canonicalName.orEmpty().parameterizedDestination(),
+        Routes.FavoriteCharacters::class.java.canonicalName.orEmpty()
     )
 
     init {
