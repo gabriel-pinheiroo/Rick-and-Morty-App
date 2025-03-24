@@ -20,6 +20,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +44,6 @@ fun LocationRoute(
     modifier: Modifier = Modifier,
     viewModel: LocationViewModel = hiltViewModel()
 ) {
-
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     BackHandler {}
@@ -61,10 +61,8 @@ fun LocationScreen(
     state: LocationState = LocationState.Idle,
     onLoadMore: () -> Unit = {},
 ) {
-
     val bottomBarManager = LocalBottomBarManager.current
     val topBarManager = LocalTopBarManager.current
-    val lazyListState = rememberLazyStaggeredGridState()
     var isLoading by remember { mutableStateOf(true) }
     val title = stringResource(id = R.string.locations)
 
@@ -81,6 +79,36 @@ fun LocationScreen(
         isLoading = false
     }
 
+    if (isLoading) {
+        LocationLoadingScreen()
+    } else {
+        LocationList(
+            modifier = modifier,
+            locations = state.locations,
+            onLoadMore = onLoadMore
+        )
+    }
+}
+
+@Composable
+fun LocationLoadingScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.DarkGray),
+        contentAlignment = Alignment.Center
+    ) {
+        RickAndMortyOrbitLoading()
+    }
+}
+
+@Composable
+fun LocationList(
+    modifier: Modifier = Modifier,
+    locations: List<Location>,
+    onLoadMore: () -> Unit
+) {
+    val lazyListState = rememberLazyStaggeredGridState()
     val shouldPaginate by remember {
         derivedStateOf {
             val lastVisibleIndex =
@@ -90,46 +118,35 @@ fun LocationScreen(
         }
     }
 
+    val updatedOnLoadMore by rememberUpdatedState(onLoadMore)
+
     LaunchedEffect(shouldPaginate) {
         if (shouldPaginate) {
-            onLoadMore()
+            updatedOnLoadMore()
         }
     }
 
-    if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.DarkGray),
-            contentAlignment = Alignment.Center
-        ) {
-            RickAndMortyOrbitLoading()
-        }
-    } else {
-        LazyVerticalStaggeredGrid(
-            state = lazyListState,
-            columns = StaggeredGridCells.Adaptive(150.dp),
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color.DarkGray),
-            verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            contentPadding = PaddingValues(4.dp)
-        ) {
-            items(
-                items = state.locations,
-                key = { location -> location.id }
-            ) { location ->
-                LocationCardListItem(location)
-            }
+    LazyVerticalStaggeredGrid(
+        state = lazyListState,
+        columns = StaggeredGridCells.Adaptive(150.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.DarkGray),
+        verticalItemSpacing = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        contentPadding = PaddingValues(4.dp)
+    ) {
+        items(
+            items = locations,
+            key = { location -> location.id }
+        ) { location ->
+            LocationCardListItem(location)
         }
     }
 }
 
 @Composable
-fun LocationCardListItem(
-    location: Location
-) {
+fun LocationCardListItem(location: Location) {
     ListItem(
         headlineContent = { Text(location.name, fontWeight = Bold) },
         supportingContent = { Text(location.dimension) },

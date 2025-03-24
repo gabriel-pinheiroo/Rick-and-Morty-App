@@ -103,7 +103,20 @@ fun CharacterDetailsContent(
     state: CharacterDetailsState = CharacterDetailsState.IDLE,
     updateFavorite: () -> Unit = {},
 ) {
+    Column(
+        modifier = modifier
+            .background(Color.DarkGray)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CharacterImageSection(state)
+        Spacer(modifier = Modifier.height(16.dp))
+        CharacterInfoSection(state, updateFavorite)
+    }
+}
 
+@Composable
+fun CharacterImageSection(state: CharacterDetailsState) {
     val context = LocalContext.current
     var backgroundColor by remember { mutableStateOf(Color.DarkGray) }
 
@@ -132,151 +145,87 @@ fun CharacterDetailsContent(
             .build()
     )
 
-    Column(
-        modifier = modifier
-            .background(Color.DarkGray)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier
+            .size(170.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(backgroundColor),
+        contentAlignment = Alignment.Center
     ) {
+        Image(
+            modifier = Modifier.sharedElement(state.character.id.toString()),
+            painter = painter,
+            contentDescription = null
+        )
+    }
+}
 
-        Box(
+@Composable
+fun CharacterInfoSection(state: CharacterDetailsState, updateFavorite: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, top = 24.dp)
+    ) {
+        FavoriteButton(isFavorite = state.character.isFavorite, updateFavorite = updateFavorite)
+
+        InfoRow(label = stringResource(R.string.species), value = state.character.species)
+        InfoRow(label = stringResource(R.string.gender), value = state.character.gender)
+        InfoRow(label = stringResource(R.string.last_known_location), value = state.character.location.name)
+        InfoRow(label = stringResource(R.string.first_seen_in), value = state.character.origin.name)
+
+        CharacterStatusIndicator(state.character.status)
+    }
+}
+
+@Composable
+fun FavoriteButton(isFavorite: Boolean, updateFavorite: () -> Unit) {
+    IconToggleButton(
+        modifier = Modifier
+            .padding(15.dp)
+            .background(Color.White.copy(alpha = 0.9f), shape = CircleShape),
+        checked = isFavorite,
+        onCheckedChange = { updateFavorite() }
+    ) {
+        Icon(
+            modifier = Modifier.size(28.dp),
+            imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Filled.FavoriteBorder,
+            contentDescription = "Favorite",
+            tint = Color.Black
+        )
+    }
+}
+
+@Composable
+fun InfoRow(label: String, value: String) {
+    Text(text = label, color = Color.Gray, fontSize = 16.sp)
+    Spacer(modifier = Modifier.height(4.dp))
+    Text(text = value, color = Color.White, fontSize = 16.sp)
+    Spacer(modifier = Modifier.height(12.dp))
+}
+
+@Composable
+fun CharacterStatusIndicator(status: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Spacer(
             modifier = Modifier
-                .size(170.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(backgroundColor),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                modifier = Modifier
-                    .sharedElement(
-                        key = state.character.id.toString(),
-                    ),
-                painter = painter,
-                contentDescription = null
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(
-                modifier = Modifier
-                    .size(6.dp)
-                    .background(
-                        color = if (state.character.status == stringResource(R.string.alive)) {
-                            Color.Green
-                        } else if (state.character.status == stringResource(R.string.dead)) {
-                            Color.Red
-                        } else {
-                            Color.Black
-                        },
-                        shape = CircleShape
-                    )
-            )
-
-            Spacer(modifier = Modifier.width(4.dp))
-
-            Text(
-                text = state.character.status,
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Column(
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, top = 24.dp)
-        ) {
-
-            IconToggleButton(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .background(Color.White.copy(alpha = 0.9f), shape = CircleShape),
-                checked = state.character.isFavorite,
-                onCheckedChange = {
-                    updateFavorite()
-                }
-            ) {
-                Icon(
-                    modifier = Modifier.size(28.dp),
-                    imageVector =
-                    if (state.character.isFavorite) Icons.Default.Favorite
-                    else Icons.Filled.FavoriteBorder,
-                    contentDescription = "Favorite",
-                    tint = Color.Black
+                .size(6.dp)
+                .background(
+                    color = when (status) {
+                        stringResource(R.string.alive) -> Color.Green
+                        stringResource(R.string.dead) -> Color.Red
+                        else -> Color.Black
+                    },
+                    shape = CircleShape
                 )
-            }
-
-            Text(
-                text = stringResource(R.string.species),
-                color = Color.Gray,
-                fontSize = 16.sp,
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = state.character.species,
-                color = Color.White,
-                fontSize = 16.sp,
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = stringResource(R.string.gender),
-                color = Color.Gray,
-                fontSize = 16.sp,
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = state.character.gender,
-                color = Color.White,
-                fontSize = 16.sp,
-            )
-
-            Spacer(
-                modifier = Modifier.height(12.dp)
-            )
-
-            Text(
-                text = stringResource(R.string.last_known_location),
-                color = Color.Gray,
-                fontSize = 16.sp,
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = state.character.location.name,
-                color = Color.White,
-                fontSize = 16.sp,
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = stringResource(R.string.first_seen_in),
-                color = Color.Gray,
-                fontSize = 16.sp,
-            )
-
-            Text(
-                text = state.character.origin.name,
-                color = Color.White,
-                fontSize = 16.sp,
-            )
-        }
-
-
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = status,
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+        )
     }
 }

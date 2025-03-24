@@ -20,6 +20,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +44,6 @@ fun EpisodeRoute(
     modifier: Modifier = Modifier,
     viewModel: EpisodeViewModel = hiltViewModel()
 ) {
-
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     BackHandler {}
@@ -55,17 +55,14 @@ fun EpisodeRoute(
     )
 }
 
-
 @Composable
 fun EpisodeScreen(
     modifier: Modifier = Modifier,
     state: EpisodeState = EpisodeState.Idle,
     onLoadMore: () -> Unit = {},
 ) {
-
     val bottomBarManager = LocalBottomBarManager.current
     val topBarManager = LocalTopBarManager.current
-    val lazyListState = rememberLazyStaggeredGridState()
     var isLoading by remember { mutableStateOf(true) }
     val title = stringResource(id = R.string.episodes)
 
@@ -82,6 +79,36 @@ fun EpisodeScreen(
         isLoading = false
     }
 
+    if (isLoading) {
+        EpisodeLoadingScreen()
+    } else {
+        EpisodeList(
+            modifier = modifier,
+            episodes = state.episodes,
+            onLoadMore = onLoadMore
+        )
+    }
+}
+
+@Composable
+fun EpisodeLoadingScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.DarkGray),
+        contentAlignment = Alignment.Center
+    ) {
+        RickAndMortyOrbitLoading()
+    }
+}
+
+@Composable
+fun EpisodeList(
+    modifier: Modifier = Modifier,
+    episodes: List<Episode>,
+    onLoadMore: () -> Unit
+) {
+    val lazyListState = rememberLazyStaggeredGridState()
     val shouldPaginate by remember {
         derivedStateOf {
             val lastVisibleIndex =
@@ -91,38 +118,29 @@ fun EpisodeScreen(
         }
     }
 
+    val updatedOnLoadMore by rememberUpdatedState(onLoadMore)
+
     LaunchedEffect(shouldPaginate) {
         if (shouldPaginate) {
-            onLoadMore()
+            updatedOnLoadMore()
         }
     }
 
-    if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.DarkGray),
-            contentAlignment = Alignment.Center
-        ) {
-            RickAndMortyOrbitLoading()
-        }
-    } else {
-        LazyVerticalStaggeredGrid(
-            state = lazyListState,
-            columns = StaggeredGridCells.Adaptive(150.dp),
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color.DarkGray),
-            verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            contentPadding = PaddingValues(4.dp)
-        ) {
-            items(
-                items = state.episodes,
-                key = { episode -> episode.id }
-            ) { episode ->
-                EpisodeListItem(episode)
-            }
+    LazyVerticalStaggeredGrid(
+        state = lazyListState,
+        columns = StaggeredGridCells.Adaptive(150.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.DarkGray),
+        verticalItemSpacing = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        contentPadding = PaddingValues(4.dp)
+    ) {
+        items(
+            items = episodes,
+            key = { episode -> episode.id }
+        ) { episode ->
+            EpisodeListItem(episode)
         }
     }
 }
@@ -143,5 +161,4 @@ fun EpisodeListItem(
         ),
         modifier = Modifier.clip(RoundedCornerShape(8.dp))
     )
-
 }

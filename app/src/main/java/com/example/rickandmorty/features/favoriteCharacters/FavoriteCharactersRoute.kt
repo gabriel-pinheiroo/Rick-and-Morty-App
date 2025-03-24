@@ -42,9 +42,11 @@ import coil.Coil
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.rickandmorty.R
+import com.example.rickandmorty.components.base.RickAndMortyOrbitLoading
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.features.theme.LocalTopBarManager
+import kotlinx.coroutines.delay
 
 @Composable
 fun FavoriteCharactersRoute(
@@ -69,6 +71,7 @@ fun FavoriteCharactersScreen(
 ) {
     val topBarManager = LocalTopBarManager.current
     val title = stringResource(R.string.favorite_characters)
+    var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         topBarManager.showTopBar()
@@ -80,39 +83,79 @@ fun FavoriteCharactersScreen(
                 onBackClicked = onBackClicked,
             )
         )
+        delay(1000)
+        isLoading = false
     }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.DarkGray),
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-        contentPadding = PaddingValues(4.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp),
-    ) {
-        items(state.favoriteCharacters) { character ->
-            FavoriteCharacterCard(
-                character = character,
-            )
+    if (isLoading) {
+        FavoriteCharactersLoadingScreen()
+    } else {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color.DarkGray),
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            contentPadding = PaddingValues(4.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            items(state.favoriteCharacters) { character ->
+                FavoriteCharacterCard(character)
+            }
         }
     }
 }
 
-@SuppressLint("SuspiciousIndentation")
+@Composable
+fun FavoriteCharactersLoadingScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.DarkGray),
+        contentAlignment = Alignment.Center
+    ) {
+        RickAndMortyOrbitLoading()
+    }
+}
+
 @Composable
 fun FavoriteCharacterCard(
     character: Character,
     modifier: Modifier = Modifier,
 ) {
+    Column(
+        modifier = modifier
+            .background(Color.DarkGray)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CharacterImageWithPalette(imageUrl = character.image)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = character.name,
+            color = Color.White,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        CharacterStatusIndicator(character.status)
+    }
+}
+
+@Composable
+fun CharacterImageWithPalette(imageUrl: String, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     var backgroundColor by remember { mutableStateOf(Color.DarkGray) }
 
-    LaunchedEffect(character.image) {
+    LaunchedEffect(imageUrl) {
         val result = Coil.imageLoader(context)
             .execute(
                 ImageRequest.Builder(context)
-                    .data(character.image)
+                    .data(imageUrl)
                     .allowHardware(false)
                     .build()
             )
@@ -128,80 +171,48 @@ fun FavoriteCharacterCard(
 
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(context)
-            .data(character.image)
+            .data(imageUrl)
             .crossfade(true)
             .build()
     )
 
-        Column(
-            modifier = modifier
-                .background(Color.DarkGray)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(backgroundColor),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painter,
-                    contentDescription = null
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = character.name,
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .background(
-                            color = if (character.status == stringResource(R.string.alive)) {
-                                Color.Green
-                            } else if (character.status == stringResource(R.string.dead)) {
-                                Color.Red
-                            } else {
-                                Color.Black
-                            },
-                            shape = CircleShape
-                        )
-                )
-
-                Spacer(modifier = Modifier.width(4.dp))
-
-                Text(
-                    text = character.status,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-        }
+    Box(
+        modifier = modifier
+            .size(150.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(backgroundColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null
+        )
+    }
 }
 
-@Preview
 @Composable
-private fun FavoriteCharacterCardPrev() {
-    FavoriteCharacterCard(
-        character = Character(
-            id = 1,
-            name = "Rick",
-            status = "Alive",
-            species = "Human",
+fun CharacterStatusIndicator(status: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(6.dp)
+                .clip(CircleShape)
+                .background(
+                    when (status) {
+                        stringResource(R.string.alive) -> Color.Green
+                        stringResource(R.string.dead) -> Color.Red
+                        else -> Color.Black
+                    }
+                )
         )
-    )
+
+        Spacer(modifier = Modifier.width(4.dp))
+
+        Text(
+            text = status,
+            color = Color.White,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+        )
+    }
 }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -111,6 +112,22 @@ fun CharacterScreen(
             onLoadMore()
         }
     }
+
+    CharacterList(
+        modifier = modifier,
+        state = state,
+        lazyListState = lazyListState,
+        onCharacterClicked = onCharacterClicked
+    )
+}
+
+@Composable
+fun CharacterList(
+    modifier: Modifier = Modifier,
+    state: CharacterState,
+    lazyListState: LazyListState,
+    onCharacterClicked: (Character) -> Unit
+) {
     LazyColumn(
         state = lazyListState,
         modifier = modifier
@@ -131,18 +148,23 @@ fun CharacterScreen(
 
         if (state.isPaginating) {
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    RickAndMortyOrbitLoading(
-                        modifier = Modifier.size(40.dp)
-                    )
-                }
+                PaginationLoader()
             }
         }
+    }
+}
+
+@Composable
+fun PaginationLoader() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        RickAndMortyOrbitLoading(
+            modifier = Modifier.size(40.dp)
+        )
     }
 }
 
@@ -168,56 +190,59 @@ fun CharactersCard(
                 contentDescription = null,
                 modifier = Modifier
                     .size(100.dp)
-                    .sharedElement(
-                        key = character.id.toString(),
-                    )
+                    .sharedElement(key = character.id.toString())
             )
 
-            Column(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxSize(),
-            ) {
-
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = character.name,
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-
-                Spacer(modifier = Modifier.height(2.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .background(
-                                color = if (character.status == stringResource(R.string.alive)) {
-                                    Color.Green
-                                } else if (character.status == stringResource(R.string.dead)) {
-                                    Color.Red
-                                } else {
-                                    Color.Black
-                                },
-                                shape = CircleShape
-                            )
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 6.dp),
-                        text = "${character.status} - ${character.species}",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
-                }
-            }
+            CharacterInfo(character)
         }
+    }
+}
+
+@Composable
+fun CharacterInfo(character: Character) {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxSize(),
+    ) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = character.name,
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+        )
+
+        Spacer(modifier = Modifier.height(2.dp))
+
+        CharacterStatus(character)
+    }
+}
+
+@Composable
+fun CharacterStatus(character: Character) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(6.dp)
+                .background(
+                    color = when (character.status) {
+                        stringResource(R.string.alive) -> Color.Green
+                        stringResource(R.string.dead) -> Color.Red
+                        else -> Color.Black
+                    },
+                    shape = CircleShape
+                )
+        )
+
+        Text(
+            modifier = Modifier.padding(start = 6.dp),
+            text = "${character.status} - ${character.species}",
+            color = Color.White,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+        )
     }
 }
