@@ -29,7 +29,7 @@
 ## 📸 Screenshots
 
 ### Characters Screen  
-![Captura de tela 2025-01-29 155843](https://github.com/user-attachments/assets/abffd09c-351c-48f5-a92f-f456885377cc)
+![Captura de tela 2025-01-29 155843](https://github.com/user-attachments/assets/ea2bd7a9-29d4-4c79-b913-8354e75e3882)
 
 
 ### Characters Detail Screen
