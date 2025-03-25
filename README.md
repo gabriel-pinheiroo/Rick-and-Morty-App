@@ -8,6 +8,12 @@
 - **Jetpack Compose** - UI toolkit  
 - **Coil** - Image renderer  
 - **Hilt** - Dependency injection  
+- **String Resources** - Text concatenation and localization  
+- **Room** - Store favorite characters  
+- **Palette** - Extract dominant colors from character images  
+- **Shared Elements** - Smooth animations between screens  
+- **ListItem** - Simplified text-based UI components  
+- **Custom Loading** - Personalized loading animations  
 
 ## 🏗️ Architecture  
 
@@ -15,8 +21,10 @@
 
 ## ✨ Improvements  
 
-- Implement **TopBar**.
-- Dominant Color Extraction in **Character Details Screen**
+- Implement **TopBar**.  
+- Implement **Shared Elements** for smooth transitions between screens.  
+- Extract **Dominant Color** in **Favorite Characters Screen**.  
+- Enable **favoriting characters**.  
 
 ## 📸 Screenshots
 
