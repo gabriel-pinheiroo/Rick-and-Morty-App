@@ -32,6 +32,11 @@
 ![Captura de tela 2025-01-29 155843](https://github.com/user-attachments/assets/ea2bd7a9-29d4-4c79-b913-8354e75e3882)
 
 
-### Characters Detail Screen
-![Captura de tela 2025-01-29 160308](https://github.com/user-attachments/assets/e46fecf1-d790-4cb0-8e60-4daf002cbd7b)
+### Favorite Characters Screen
+![Captura de tela 2025-01-29 160308](https://github.com/user-attachments/assets/2a2dccee-31cd-42be-9353-a369d6ac420a)
 
+### Episodes Screen
+![demo](https://github.com/user-attachments/assets/d6fd8072-726e-4c6b-bc2c-8f017d92c33a)
+
+### Locations Screen
+![Image](https://github.com/user-attachments/assets/18632fa8-9ecb-42b6-a8d8-89ca3dac5635)
