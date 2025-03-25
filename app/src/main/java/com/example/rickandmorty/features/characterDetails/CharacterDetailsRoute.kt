@@ -1,8 +1,6 @@
 package com.example.rickandmorty.features.characterDetails
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -23,29 +20,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.palette.graphics.Palette
-import coil.Coil
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
+import coil.compose.AsyncImage
 import com.example.rickandmorty.R
 import com.example.rickandmorty.components.topbar.TopBarConfig
 import com.example.rickandmorty.components.utils.sharedElement
-import com.example.rickandmorty.domain.models.Character
 import com.example.rickandmorty.features.theme.LocalTopBarManager
 
 @Composable
@@ -90,11 +77,11 @@ fun CharacterDetailsScreen(
             )
         )
     }
-        CharacterDetailsContent(
-            state = state,
-            modifier = modifier,
-            updateFavorite = updateFavorite,
-        )
+    CharacterDetailsContent(
+        state = state,
+        modifier = modifier,
+        updateFavorite = updateFavorite,
+    )
 }
 
 @Composable
@@ -117,47 +104,14 @@ fun CharacterDetailsContent(
 
 @Composable
 fun CharacterImageSection(state: CharacterDetailsState) {
-    val context = LocalContext.current
-    var backgroundColor by remember { mutableStateOf(Color.DarkGray) }
-
-    LaunchedEffect(state.character.image) {
-        val result = Coil.imageLoader(context)
-            .execute(
-                ImageRequest.Builder(context)
-                    .data(state.character.image)
-                    .allowHardware(false)
-                    .build()
-            )
-
-        val bitmap = (result.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap
-        bitmap?.let {
-            val palette = Palette.from(it).generate()
-            palette.dominantSwatch?.rgb?.let { colorValue ->
-                backgroundColor = Color(colorValue)
-            }
-        }
-    }
-
-    val painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(context)
-            .data(state.character.image)
-            .crossfade(true)
-            .build()
-    )
-
-    Box(
+    AsyncImage(
         modifier = Modifier
-            .size(170.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(backgroundColor),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            modifier = Modifier.sharedElement(state.character.id.toString()),
-            painter = painter,
-            contentDescription = null
-        )
-    }
+            .fillMaxWidth()
+            .padding(32.dp)
+            .sharedElement(state.character.id.toString()),
+        model = state.character.image,
+        contentDescription = null,
+    )
 }
 
 @Composable
