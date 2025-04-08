@@ -13,7 +13,8 @@
 - **Palette** - Extract dominant colors from character images  
 - **Shared Elements** - Smooth animations between screens  
 - **ListItem** - Simplified text-based UI components  
-- **Custom Loading** - Personalized loading animations  
+- **Custom Loading** - Personalized loading animations
+- **Testing** - using mockito
 
 ## 🏗️ Architecture  
 
